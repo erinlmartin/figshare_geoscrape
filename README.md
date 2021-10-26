@@ -2,6 +2,7 @@
 Python code for scraping the figshare database and creating an SQLite database of geochemical analyses
 
 Instructions for web scraping code
+
 INSTALLATION
 1. Ensure you have the current version of python installed (this code was written in Python 3). Download and install python: https://www.python.org/downloads/
 IMPORTANT:
