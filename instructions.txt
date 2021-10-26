@@ -27,3 +27,6 @@ OPERATION
 
 6. Run the data_to_sql_database.py code. Follow the instructions within the code to build on the database from Martin et al. (2021) or to create your own new database.
 
+DATA AVAILABILITY:
+
+
