@@ -15,7 +15,7 @@ downloads files that have not been retrieved to the working folder
 # STEP 1: Enter the details and execute this block of code
 
 #   Specify the name of the sqlite database you created in the figshare_search
-#   code
+#   code. Download SQLite files from: https://doi.org/10.6084/m9.figshare.16870603.v1
 sqlite_filename = ".sqlite"
 
 #   Set the limit of the number of articles you wish to download (integer)

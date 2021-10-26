@@ -23,7 +23,9 @@ TOKEN = " "
 #   Enter the filename for the sqlite database in which to store your metadata. 
 #   If you have not yet created a database, enter a new filename and the 
 #   database will be created. Input is a string that must end in .sqlite
-#   If using the database from Martin et al. (2021) enter "fsdownloads.sqlite"
+#   To build on the database from Martin et al. (2021) (Download from: )
+#   enter "fsdownloads.sqlite". To use the template file enter "fsdownloads_template.sqlite".
+#   Download SQLite files from: https://doi.org/10.6084/m9.figshare.16870603.v1
 sqlite_filename = " .sqlite"
 
 

@@ -12,17 +12,19 @@ CREATES AN SQL DATA TABLE TO STORE WED SCRAPED AND CLEANED DATA
 #%%
 
 #   Specify the name of the sqlite database you would like to store your
-#   data in. This can be a new data sheet or the existing "geoscrape.sqlite"
+#   data in. This can be a new data sheet, the geoscrape_template.sqlite template 
+#   or the existing "geoscrape.sqlite" (Download from: )
 #   created by Martin et al. (2021). Ensure the database file is in the same
 #   working folder as the files you would like to input into the database.
+#   Download SQLite files from: https://doi.org/10.6084/m9.figshare.16870603.v1
 
-sqlite_filename = "geoscrape.sqlite"
+sqlite_filename = ".sqlite"
 
 #   Enter the name of the data table within the SQL database that the data will 
 #   be entered into. For example, if using the database from Martin et al. (2021)
 #   enter "zircon_data"
 
-sql_datatable = "zircon_data"
+sql_datatable = " "
 
 
 #   To create a new SQLite databse from scratch, see instructions at the bottom 
