@@ -33,6 +33,7 @@ sql_datatable = " "
 
 #   STEP 1
 #   Execute this code to connect to the database
+#   Replace the ??? in the SQL code below with your SQL datatable name
 
 import pandas as pd
 import sqlite3
@@ -41,6 +42,9 @@ import re
 file = sqlite_filename
 conn = sqlite3.connect(file)
 cur = conn.cursor()
+
+cur.execute('''CREATE TABLE IF NOT EXISTS ???
+    (entry_id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE)''')
 
 print("connection established")
 
