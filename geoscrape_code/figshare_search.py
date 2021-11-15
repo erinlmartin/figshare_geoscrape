@@ -89,7 +89,10 @@ def figshare_search(searchterm, limit, TOKEN, sqlite_filename):
             AUTOINCREMENT,
          articlenum TEXT UNIQUE, 
          title TEXT UNIQUE, 
-         citation TEXT UNIQUE)''')
+         citation TEXT UNIQUE,
+         paper_doi TEXT, 
+         paper_title TEXT, 
+         license TEXT)''')
     
     cur.execute('''CREATE TABLE IF NOT EXISTS doitable
         (doi_id  INTEGER PRIMARY KEY
@@ -109,6 +112,13 @@ def figshare_search(searchterm, limit, TOKEN, sqlite_filename):
          file_type TEXT, 
          download_url TEXT,
          status TEXT)''')
+        
+    cur.execute('''CREATE TABLE IF NOT EXISTS authors 
+        (author_id INTEGER PRIMARY KEY
+            AUTOINCREMENT,
+        article_id	INTEGER,
+		author_name	TEXT, 
+        orcid_id TEXT UNIQUE)''')
     
     ent = 1
     for entry in apilist:
@@ -128,6 +138,9 @@ def figshare_search(searchterm, limit, TOKEN, sqlite_filename):
         citation = info['citation']
         dois = info['doi']
         description = info['description']
+        paper_doi = info['resource_doi']
+        paper_title = info['resource_title']
+        lic = info['license']['name']
         status = "unretrieved"
     
     
@@ -135,10 +148,10 @@ def figshare_search(searchterm, limit, TOKEN, sqlite_filename):
         
         try:
             cur.execute('''INSERT OR IGNORE INTO article
-                        (articlenum, 
-                         title, 
-                         citation)
-                        VALUES ( ?, ?, ? )''', ( articlenumber, title, citation, ))
+                    (articlenum, 
+                     title, 
+                     citation, paper_doi, paper_title, license)
+                    VALUES ( ?, ?, ?, ?, ?, ?)''', ( articlenumber, title, citation, paper_doi, paper_title, lic))
             cur.execute('SELECT article_id FROM article WHERE articlenum = ? ', (articlenumber,  ))
             article_id = cur.fetchone()[0]
         
@@ -165,6 +178,19 @@ def figshare_search(searchterm, limit, TOKEN, sqlite_filename):
               cur.execute('SELECT downloadurl_id FROM files WHERE download_url = ? ', (download_url, ))
               downloadurl_id = cur.fetchone()[0]
               conn.commit()
+              
+            for a in info['authors']:
+              author_name = a['full_name']
+              orcid_id = a['orcid_id']
+              cur.execute('''INSERT OR IGNORE INTO authors
+                          (article_id, 
+                           author_name, 
+                           orcid_id) 
+                          VALUES ( ?, ?, ? )''',
+              (article_id, author_name, orcid_id))
+              cur.execute('SELECT author_id FROM authors WHERE author_name = ? ', (author_name, ))
+              author_id = cur.fetchone()[0]
+              conn.commit()  
         except: continue
         
        # if ent == limit+1: break
