@@ -92,7 +92,9 @@ def figshare_search(searchterm, limit, TOKEN, sqlite_filename):
          citation TEXT UNIQUE,
          paper_doi TEXT, 
          paper_title TEXT, 
-         license TEXT)''')
+         license TEXT,
+         author TEXT,
+         funding TEXT)''')
     
     cur.execute('''CREATE TABLE IF NOT EXISTS doitable
         (doi_id  INTEGER PRIMARY KEY
@@ -141,6 +143,8 @@ def figshare_search(searchterm, limit, TOKEN, sqlite_filename):
         paper_doi = info['resource_doi']
         paper_title = info['resource_title']
         lic = info['license']['name']
+        auth = info['authors'][0]['full_name']
+        fund = info['funding']
         status = "unretrieved"
     
     
@@ -150,8 +154,8 @@ def figshare_search(searchterm, limit, TOKEN, sqlite_filename):
             cur.execute('''INSERT OR IGNORE INTO article
                     (articlenum, 
                      title, 
-                     citation, paper_doi, paper_title, license)
-                    VALUES ( ?, ?, ?, ?, ?, ?)''', ( articlenumber, title, citation, paper_doi, paper_title, lic))
+                     citation, paper_doi, paper_title, license, auth, fund)
+                    VALUES ( ?, ?, ?, ?, ?, ?,?,?)''', ( articlenumber, title, citation, paper_doi, paper_title, lic, author, funding))
             cur.execute('SELECT article_id FROM article WHERE articlenum = ? ', (articlenumber,  ))
             article_id = cur.fetchone()[0]
         
