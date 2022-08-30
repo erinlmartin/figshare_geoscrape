@@ -14,6 +14,10 @@ downloads files that have not been retrieved to the working folder
 
 # STEP 1: Enter the details and execute this block of code
 
+#   Specify the path to the folder in which you want to save your downloaded file. Place the folder path
+#   inside the "" after the r, e.g. folder = (r"C:\myfolder\")
+folder = (r" ")
+          
 #   Specify the name of the sqlite database you created in the figshare_search
 #   code. Download SQLite files from: https://doi.org/10.6084/m9.figshare.16870603.v1
 sqlite_filename = ".sqlite"
@@ -32,13 +36,16 @@ def databaser(sqlite_filename, limit):
     import urllib.request, urllib.parse, urllib.error
     import sqlite3
     import re
+    import os
 
+    
 
     conn = sqlite3.connect(sqlite_filename)
     cur = conn.cursor()
     
     status = "unretrieved"
     new_status = "retrieved"
+    relevance = "relevant"
     batch_size = limit
     
      
@@ -46,8 +53,9 @@ def databaser(sqlite_filename, limit):
                 FROM Files
                 INNER JOIN article
                 ON article.article_id = Files.article_id
-                WHERE status=?
-                ORDER BY RANDOM()''', (status, )      
+                WHERE Files.status=? 
+                AND article.relevance=?
+                ORDER BY RANDOM()''', (status, relevance)      
                 )
     try:  
         while True: 
@@ -66,11 +74,12 @@ def databaser(sqlite_filename, limit):
                 dlnum = re.findall('[0-9]+$', row_id)
                 dl = dlnum[0]
                 filename = (art_num+'_'+dl+'.'+suf)
-                
+                file_path = os.path.join(folder, filename)
+               
                 url = str(row_id)
                 print('Accessing download URL', url)
                 try:
-                    urllib.request.urlretrieve(url, filename)
+                    urllib.request.urlretrieve(url, file_path)
                     print("Saving", filename)
                     cur.execute('''UPDATE Files 
                             SET status=?

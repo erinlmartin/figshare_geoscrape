@@ -28,6 +28,10 @@ TOKEN = " "
 #   Download SQLite files from: https://doi.org/10.6084/m9.figshare.16870603.v1
 sqlite_filename = " .sqlite"
 
+#   Add any terms to be excluded from the search (these will be marked irrelevant and not downloaded)
+#   Enter the terms to be excluded between the ' ' and separate each term by a comma
+
+excludedterms =['','']
 
 #%%
 
@@ -94,7 +98,8 @@ def figshare_search(searchterm, limit, TOKEN, sqlite_filename):
          paper_title TEXT, 
          license TEXT,
          author TEXT,
-         funding TEXT)''')
+         funding TEXT,
+         relevance TEXT)''')
     
     cur.execute('''CREATE TABLE IF NOT EXISTS doitable
         (doi_id  INTEGER PRIMARY KEY
@@ -146,6 +151,8 @@ def figshare_search(searchterm, limit, TOKEN, sqlite_filename):
         auth = info['authors'][0]['full_name']
         fund = info['funding']
         status = "unretrieved"
+        relevance = "relevant"
+        irrelevant = "irrelevant"
     
     
         print((articlenumber, title))
@@ -154,8 +161,8 @@ def figshare_search(searchterm, limit, TOKEN, sqlite_filename):
             cur.execute('''INSERT OR IGNORE INTO article
                     (articlenum, 
                      title, 
-                     citation, paper_doi, paper_title, license, auth, fund)
-                    VALUES ( ?, ?, ?, ?, ?, ?,?,?)''', ( articlenumber, title, citation, paper_doi, paper_title, lic, author, funding))
+                     citation, paper_doi, paper_title, license, author, funding, relevance)
+                    VALUES ( ?, ?, ?, ?, ?, ?,?,?, ?)''', ( articlenumber, title, citation, paper_doi, paper_title, lic, auth, fund, relevance))
             cur.execute('SELECT article_id FROM article WHERE articlenum = ? ', (articlenumber,  ))
             article_id = cur.fetchone()[0]
         
@@ -196,7 +203,13 @@ def figshare_search(searchterm, limit, TOKEN, sqlite_filename):
               author_id = cur.fetchone()[0]
               conn.commit()  
         except: continue
-        
+    
+        for i in excludedterms:
+            cur.execute(''' UPDATE article
+                        SET relevance=?
+                        WHERE article.citation LIKE ?''',
+           (irrelevant, i,))
+   
        # if ent == limit+1: break
          
      
