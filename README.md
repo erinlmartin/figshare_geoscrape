@@ -38,3 +38,9 @@ SQLite template files and metadata available from Figshare: https://doi.org/10.6
 To continue to build on the database published by Martin et al. (2021), download the complete Martin et al. database from GEOROC and save as zircon_data.csv, then import the csv into an SQLite Database (first row as headers) and save the database as geoscrape.sqlite in the same folder as the code. 
 Download the fsdownload.sqlite file from Figshare: https://doi.org/10.6084/m9.figshare.16870603.v1, and save it into the same folder as the code and the geoscrape.sqlite file.
 
+Possible Dependencies:
+
+six https://pypi.org/project/six/
+certifi https://pypi.org/project/certifi/
+python-dateutil https://pypi.org/project/python-dateutil/
+urllib3 https://pypi.org/project/urllib3/
